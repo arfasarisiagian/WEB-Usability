@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konsep dan Rekayasa Usability</title>
+    <!-- Menggunakan font modern dan elegan dari Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palet Warna Pink & Putih */
+            --primary: #ec4899; /* Pink cerah elegan */
+            --primary-dark: #be185d;
+            --primary-light: #fbcfe8; /* Pink pastel super lembut */
+            --primary-soft: #fdf2f8; /* Background pink nyaris putih */
+            --secondary: #ffe4e6;
+            --text-main: #374151; /* Abu-abu tua untuk teks utama agar nyaman dibaca */
+            --text-light: #6b7280;
+            --bg-body: #fff5f7; /* Latar belakang body pink keputihan */
+            --white: #ffffff;
+            --border: #fbcfe8;
+            --shadow-sm: 0 2px 4px rgba(236, 72, 153, 0.05);
+            --shadow-md: 0 8px 15px -3px rgba(236, 72, 153, 0.1), 0 4px 6px -2px rgba(236, 72, 153, 0.05);
+            --shadow-lg: 0 15px 25px -5px rgba(236, 72, 153, 0.15), 0 8px 10px -5px rgba(236, 72, 153, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.75;
+            padding: 2.5rem 1.5rem;
+            overflow-x: hidden;
+            /* Pola latar belakang (Pattern) polkadot super samar */
+            background-image: radial-gradient(var(--primary-light) 1px, transparent 1px);
+            background-size: 25px 25px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* --- KEYFRAMES ANIMASI --- */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Kelas untuk menyembunyikan teks cite agar desain rapi */
+        .hide-text {
+            display: none !important;
+        }
+
+        /* Header Styling */
+        .header {
+            background: linear-gradient(135deg, #f472b6, #ec4899, #db2777);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite, slideInDown 0.8s ease-out forwards;
+            color: var(--white);
+            padding: 4.5rem 2rem;
+            border-radius: 24px;
+            margin-bottom: 3rem;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Aksen dekoratif membulat pada header */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -20px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.3;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Card Layout */
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(251, 207, 232, 0.6);
+            opacity: 0;
+            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Garis pink kecil di bagian atas setiap card */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #fbcfe8, #ec4899, #fbcfe8);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Delay berurutan untuk animasi masuk setiap kartu */
+        .card:nth-child(2) { animation-delay: 0.1s; }
+        .card:nth-child(3) { animation-delay: 0.25s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.55s; }
+        .card:nth-child(6) { animation-delay: 0.7s; }
+        .card:nth-child(7) { animation-delay: 0.85s; }
+        .card:nth-child(8) { animation-delay: 1.0s; } /* Profil Card */
+
+        /* Hover efek pada kartu */
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        /* Section Header & Nomor */
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px dashed var(--border);
+            padding-bottom: 1.25rem;
+        }
+
+        .number-badge {
+            background: linear-gradient(135deg, #f472b6, #db2777);
+            color: var(--white);
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px; /* Kotak membulat (squircle) */
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-right: 1.25rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .card:hover .number-badge {
+            transform: rotate(-10deg) scale(1.1);
+        }
+
+        .section-title {
+            color: var(--primary-dark);
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        /* Tipografi Konten */
+        p {
+            margin-bottom: 1.25rem;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.75rem;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+        }
+
+        li::marker {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        strong {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        /* Kotak Referensi */
+        .reference {
+            background-color: var(--primary-soft);
+            border-left: 4px solid var(--primary);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 12px 12px 0;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .reference:hover {
+            background-color: var(--primary-light);
+            border-left-width: 6px;
+        }
+
+        /* Tombol Link Jurnal */
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            background: var(--primary);
+            color: white;
+            padding: 0.6rem 1.25rem;
+            border-radius: 50px; /* Tombol bulat (pill shape) */
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            width: max-content;
+            box-shadow: 0 4px 6px rgba(236, 72, 153, 0.25);
+        }
+
+        .btn-link svg {
+            margin-right: 8px;
+        }
+
+        .btn-link:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(236, 72, 153, 0.4);
+        }
+
+        /* Highlight khusus untuk kata kunci */
+        .highlight {
+            background: linear-gradient(120deg, var(--primary-light) 0%, rgba(255,255,255,0) 100%);
+            padding: 0 4px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* Profil Card Styling (Elegan) */
+        .profile-card {
+            background: linear-gradient(to bottom, #ffffff, var(--primary-soft));
+            border: 2px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center; /* Memastikan semua elemen rata tengah */
+            padding: 3.5rem 2rem;
+        }
+
+        .profile-card::before {
+            display: none; /* Hilangkan garis pink atas khusus untuk card ini */
+        }
+
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #f472b6 0%, #be185d 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0 auto 1.25rem;
+            box-shadow: 0 8px 15px rgba(236, 72, 153, 0.3);
+            border: 4px solid white;
+        }
+
+        .profile-info {
+            width: 100%;
+            text-align: center; /* Rata tengah secara spesifik pada pembungkus info */
+        }
+
+        .profile-info h3 {
+            font-size: 1.75rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            text-align: center;
+        }
+
+        .profile-info p {
+            color: var(--primary);
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+            text-align: center; /* Memaksa teks p menjadi rata tengah */
+        }
+
+        .profile-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .profile-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .email-link {
+            background: white;
+            color: var(--primary-dark);
+            border: 2px solid var(--primary-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .email-link:hover {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .ig-link {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 10px rgba(220, 39, 67, 0.3);
+        }
+
+        .ig-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(220, 39, 67, 0.4);
+            filter: brightness(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 3rem 1.5rem; }
+            .header h1 { font-size: 2rem; }
+            .card { padding: 1.75rem; }
+            .section-title { font-size: 1.25rem; }
+            .profile-links { flex-direction: column; width: 100%; }
+            .profile-link { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <h1>Konsep dan Rekayasa Usability<span class="hide-text">[cite: 10]</span></h1>
+    </header>
+
+    <!-- Bagian 1 -->
+    <div class="card">
+        <div class="section-header">
+            <span class="number-badge">1</span>
+            <h2 class="section-title">Definisi Usability dalam Sebuah Sistem</h2>
+        </div>
+        <p>Dalam konteks Sistem Informasi, <span class="highlight">usability (kegunaan)</span> didefinisikan sebagai derajat sejauh mana sebuah perangkat lunak dapat digunakan oleh user spesifik untuk mencapai tujuannya dengan tingkat efektivitas, efisiensi, dan kepuasan secara maksimal dalam konteks penggunaan tertentu (merujuk pada standar ISO 9241-11).<span class="hide-text">[cite: 10]</span> Secara kritis, usability menyoroti harmonisasi antara model mental (cara berpikir pengguna) dengan model sistem, agar sistem mampu memfasilitasi beban kognitif serendah mungkin saat pengguna memproses informasi.<span class="hide-text">[cite: 10]</span></p>
+        <div class="reference">
+            <span><strong>Referensi:</strong> Sudarsana, I. P. E. (2025). "Menilai Kegunaan untuk Keberlanjutan: Studi Usability Testing pada Sistem Informasi Akademik". Jurnal Pendidikan dan Teknologi Multimedia.<span class="hide-text">[cite: 10]</span></span>
+            <a href="https://ejournal.poltekelbajo.ac.id/" target="_blank" class="btn-link">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+                Tautan Jurnal (Poltek ElBajo)
+            </a><span class="hide-text">[cite: 10]</span>
+        </div>
+    </div>
+
+    <!-- Bagian 2 -->
+    <div class="card">
+        <div class="section-header">
+            <span class="number-badge">2</span>
+            <h2 class="section-title">Kenapa Usability Penting</h2>
+        </div>
+        <p>Bagi seorang analis dan perancang sistem, usability adalah penentu mutlak keberlanjutan operasional (<span class="highlight">sustainability</span>).<span class="hide-text">[cite: 10]</span> Sistem informasi yang kompleks (misalnya ERP atau Sistem Akademik) namun memiliki usability buruk akan memicu cognitive overload, tingginya rasio human-error, dan lambatnya produktivitas pekerja.<span class="hide-text">[cite: 10]</span> Kegagalan usability akan memicu resistensi pengguna yang pada akhirnya berujung pada system abandonment (sistem tidak dipakai), sehingga merugikan organisasi secara finansial dalam biaya pelatihan ulang dan redesign.<span class="hide-text">[cite: 10]</span></p>
+        <div class="reference">
+            <span><strong>Referensi:</strong> Putra, dkk. (2024). "Comparing the Relevance of the USE Questionnaire and Heatmap Analysis in Evaluating Usability". Journal of Information Systems and Society (JISS).<span class="hide-text">[cite: 10]</span></span>
+            <a href="https://jurnal.ftikomibn.ac.id/index.php/jtksi/article/download/1600/pdf" target="_blank" class="btn-link">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+                Tautan Jurnal
+            </a><span class="hide-text">[cite: 10]</span>
+        </div>
+    </div>
+
+    <!-- Bagian 3 -->
+    <div class="card">
+        <div class="section-header">
+            <span class="number-badge">3</span>
+            <h2 class="section-title">Atribut Usability</h2>
+        </div>
+        <p>Menurut standar kelayakan metrik HCI (seperti yang digagas Jakob Nielsen & ISO), atribut kelayakan interaksi sistem dapat dibedah secara kritis menjadi lima dimensi utama (KPI):<span class="hide-text">[cite: 11]</span></p>
+        <ul>
+            <li><strong>Learnability:</strong> Kecepatan user awam dalam beradaptasi dengan alur sistem.<span class="hide-text">[cite: 11]</span></li>
+            <li><strong>Efficiency:</strong> Kecepatan produktivitas saat pengguna sudah memahami sistem.<span class="hide-text">[cite: 11]</span></li>
+            <li><strong>Memorability:</strong> Kapasitas user untuk mengingat cara kerja sistem setelah lama tidak menggunakannya.<span class="hide-text">[cite: 11]</span></li>
+            <li><strong>Errors:</strong> Kemampuan sistem dalam mencegah kesalahan input dan memandu cara perbaikannya (toleransi error).<span class="hide-text">[cite: 11]</span></li>
+            <li><strong>Satisfaction:</strong> Kepuasan dan kenyamanan psikologis pengguna secara menyeluruh.<span class="hide-text">[cite: 11]</span></li>
+        </ul>
+        <div class="reference">
+            <span><strong>Referensi:</strong> Santoso, dkk. (2022). "Investigating the Effect of m-Commerce Application's Functional and Usability Attributes". Journal of Information and Communication Technology Research and Applications.<span class="hide-text">[cite: 11]</span></span>
+            <a href="https://journals.itb.ac.id/" target="_blank" class="btn-link">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+                Tautan Jurnal (ITB Journals)
+            </a><span class="hide-text">[cite: 11]</span>
+        </div>
+    </div>
+
+    <!-- Bagian 4 -->
+    <div class="card">
+        <div class="section-header">
+            <span class="number-badge">4</span>
+            <h2 class="section-title">Langkah-Langkah Usability</h2>
+        </div>
+        <p>Dalam metodologi Human-Centered Design (HCD) untuk proyek sistem informasi, implementasi usability melibatkan kerangka langkah terstruktur:<span class="hide-text">[cite: 11]</span></p>
+        <ol>
+            <li><strong>Identifikasi Konteks:</strong> Memahami siapa end-user dan di mana sistem digunakan.<span class="hide-text">[cite: 11]</span></li>
+            <li><strong>Spesifikasi Kebutuhan:</strong> Mengumpulkan requirements bisnis dan operasional.<span class="hide-text">[cite: 11]</span></li>
+            <li><strong>Desain Solusi:</strong> Pembuatan purwarupa (dari rancangan struktur data ke prototipe wireframe interaktif).<span class="hide-text">[cite: 11]</span></li>
+            <li><strong>Evaluasi:</strong> Menguji solusi prototipe tersebut pada pengguna sesungguhnya sebelum kode diprogram.<span class="hide-text">[cite: 11]</span></li>
+            <li><strong>Iterasi:</strong> Mengulang proses desain berdasarkan temuan (pain-points) di tahap evaluasi.<span class="hide-text">[cite: 11]</span></li>
+        </ol>
+        <div class="reference">
+            <span><strong>Referensi:</strong> Heryani, dkk. (2020/2021). "Analisis Usability Web (Studi Kasus Website UMKM)". Jurnal Ilmiah Teknologi Informasi Terapan (JITTER).<span class="hide-text">[cite: 11]</span></span>
+            <a href="https://journal.widyatama.ac.id/index.php/jitter/" target="_blank" class="btn-link">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+                Tautan Jurnal (JITTER Widyatama)
+            </a><span class="hide-text">[cite: 11]</span>
+        </div>
+    </div>
+
+    <!-- Bagian 5 -->
+    <div class="card">
+        <div class="section-header">
+            <span class="number-badge">5</span>
+            <h2 class="section-title">Metode Pengukuran Rekayasa Usability</h2>
+        </div>
+        <p>Anda dituntut mengevaluasi sistem menggunakan bukti data, bukan sekadar opini. Pengukuran rekayasa usability dibagi menjadi dua instrumen evaluasi utama:<span class="hide-text">[cite: 12]</span></p>
+        <ul>
+            <li><strong>Evaluasi Kuantitatif (Objektif):</strong> Melacak metrik angka murni seperti Task Success Rate (TSR) atau merekam heatmap tracking untuk melihat jejak klik interaksi pengguna yang sebenarnya di layar.<span class="hide-text">[cite: 12]</span></li>
+            <li><strong>Evaluasi Kualitatif (Persepsi):</strong> Pengukuran berbasis psikometrik, contohnya menggunakan tes kuesioner berstandar global seperti System Usability Scale (SUS), PSSUQ, atau observasi Think-Aloud (meminta pengguna berbicara keras tentang alur berpikirnya selagi menavigasi menu).<span class="hide-text">[cite: 12]</span></li>
+        </ul>
+        <div class="reference">
+            <span><strong>Referensi:</strong> Rusu, dkk. (2024). "Usability and User Experience Evaluation in Intelligent Environments". International Journal of Human-Computer Interaction.<span class="hide-text">[cite: 12]</span></span>
+            <a href="https://www.tandfonline.com/" target="_blank" class="btn-link">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+                Tautan Jurnal (Taylor & Francis)
+            </a><span class="hide-text">[cite: 12]</span>
+        </div>
+    </div>
+
+    <!-- Bagian 6 -->
+    <div class="card">
+        <div class="section-header">
+            <span class="number-badge">6</span>
+            <h2 class="section-title">Siklus Hidup Usability (Usability Engineering Lifecycle)</h2>
+        </div>
+        <p>Usability bukan tahapan "poles akhir".<span class="hide-text">[cite: 12]</span> Dalam integrasi dengan siklus pengembangan perangkat lunak (Software Development Life Cycle / SDLC), usability memiliki daur hidup rekayasa sendiri (berdasarkan model Deborah Mayhew) yang dipecah menjadi tiga fase organik:<span class="hide-text">[cite: 12]</span></p>
+        <ol>
+            <li><strong>Analisis Kebutuhan (Pre-development):</strong> Ekstraksi profil pengguna dan tujuan operasional.<span class="hide-text">[cite: 12]</span></li>
+            <li><strong>Desain & Evaluasi Formatif (In-development):</strong> Pembuatan dan pengujian antarmuka sistem secara terus-menerus/iteratif bersama developer.<span class="hide-text">[cite: 12]</span></li>
+            <li><strong>Instalasi (Post-development):</strong> Pelaksanaan evaluasi sumatif pasca-rilis untuk memantau adaptasi teknologi pengguna di lapangan jangka panjang.<span class="hide-text">[cite: 12]</span></li>
+        </ol>
+        <div class="reference">
+            <span><strong>Referensi:</strong> Marques, dkk. (2024). "Interaction Design in Distributed Software Development". Journal on Interactive Systems (JIS).<span class="hide-text">[cite: 12]</span></span>
+            <a href="https://sol.sbc.org.br/journals/index.php/jis" target="_blank" class="btn-link">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+                Tautan Jurnal (JIS SBC Publisher)
+            </a><span class="hide-text">[cite: 12]</span>
+        </div>
+    </div>
+
+    <!-- Profil Penulis -->
+    <div class="card profile-card">
+        <div class="profile-avatar">AS</div>
+        <div class="profile-info">
+            <h3>Arfa Sari Siagian</h3>
+            <p>Penulis Dokumen</p>
+        </div>
+        <div class="profile-links">
+            <a href="mailto:arfasiagian18@gmail.com" class="profile-link email-link">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12.713l11.985-8.713h-23.97l11.985 8.713zm0 2.574l-12-8.727v14.44h24v-14.44l-12 8.727z"/></svg>
+                arfasiagian18@gmail.com
+            </a>
+            <a href="https://www.instagram.com/arfa.sgn?cplk=NnNvOWtnZWJseXBw" target="_blank" class="profile-link ig-link">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                @arfa.sgn
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
